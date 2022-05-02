@@ -2,6 +2,7 @@
   "name": "cargo-atcoder-vscode",
 	"displayName": "cargo-atcoder-vscode",
 	"description": "",
+	"repository": "https://github.com/himkt/cargo-atcoder-vscode",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.66.0"
