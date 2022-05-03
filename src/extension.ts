@@ -4,68 +4,59 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 
 
-const type = 'cargoAtcoderProvider';
+const type = 'cargo-atcoder';
+
+
+const createTask = (name: string, command: string) => {
+	return new vscode.Task(
+		{ type, name },
+		vscode.TaskScope.Workspace,
+		name,
+		type,
+		new vscode.ShellExecution(command),
+	);
+};
 
 
 export async function activate(context: vscode.ExtensionContext) {
-
-	// (1). command
-
-	let cargoRun = (type: String) => {
-		let currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
-		let basename = path.parse(currentFilePath).name;
-
-		let terminal = vscode.window.createTerminal();
-		terminal.sendText(`cargo atcoder ${type} ${basename}`);
-		terminal.show();
-	};
-
 	let testCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.test', () => {
-		cargoRun('test');
+		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
+		const basename = path.parse(currentFilePath).name;
+		const task = createTask('test', `cargo atcoder test ${basename}`);
+		vscode.tasks.executeTask(task);
 	});
 
 	let submitCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.submit', () => {
-		cargoRun('submit');
+		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
+		const basename = path.parse(currentFilePath).name;
+		const task = createTask('submit', `cargo atcoder submit ${basename}`);
+		vscode.tasks.executeTask(task);
+	});
+
+	let forceSubmitCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.submit-force', () => {
+		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
+		const basename = path.parse(currentFilePath).name;
+		const task = createTask('submit', `cargo atcoder submit --force ${basename}`);
+		vscode.tasks.executeTask(task);
+	});
+
+	let statusCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.status', () => {
+		const task = createTask('status', 'cargo atcoder status');
+		vscode.tasks.executeTask(task);
+	});
+
+	let runCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.run', () => {
+		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
+		const basename = path.parse(currentFilePath).name;
+		const task = createTask('run', `cargo run --bin ${basename}`);
+		vscode.tasks.executeTask(task);
 	});
 
 	context.subscriptions.push(testCommand);
 	context.subscriptions.push(submitCommand);
-
-	// (2). tasks
-
-    vscode.tasks.registerTaskProvider(type, {
-        provideTasks(token?: vscode.CancellationToken) {
-			const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
-			const basename = path.parse(currentFilePath).name;
-
-            return [
-                new vscode.Task(
-					{ type: type, command: "status" },
-					vscode.TaskScope.Workspace,
-                    "status",
-					"cargo-atcoder",
-					new vscode.ShellExecution(`cargo atcoder status`)
-				),
-                new vscode.Task(
-					{ type: type, command: "test" },
-					vscode.TaskScope.Workspace,
-                    "test",
-					"cargo-atcoder",
-					new vscode.ShellExecution(`cargo atcoder test ${basename}`)
-				),
-                new vscode.Task(
-					{ type: type, command: "submit" },
-					vscode.TaskScope.Workspace,
-                    "submit",
-					"cargo-atcoder",
-					new vscode.ShellExecution(`cargo atcoder submit ${basename}`)
-				)
-            ];
-        },
-        resolveTask(task: vscode.Task, token?: vscode.CancellationToken) {
-            return task;
-        }
-    });
+	context.subscriptions.push(forceSubmitCommand);
+	context.subscriptions.push(statusCommand);
+	context.subscriptions.push(runCommand);
 }
 
 export function deactivate() {}
