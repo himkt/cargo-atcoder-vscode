@@ -3,7 +3,7 @@
 	"displayName": "cargo-atcoder-vscode",
 	"description": "",
 	"repository": "https://github.com/himkt/cargo-atcoder-vscode",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"engines": {
 		"vscode": "^1.66.0"
 	},
@@ -13,7 +13,9 @@
 	"activationEvents": [
 		"onCommand:cargo-atcoder-vscode.test",
 		"onCommand:cargo-atcoder-vscode.submit",
-		"onCommand:workbench.action.tasks.runTask"
+		"onCommand:cargo-atcoder-vscode.submit-force",
+		"onCommand:cargo-atcoder-vscode.status",
+		"onCommand:cargo-atcoder-vscode.run"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -25,16 +27,18 @@
 			{
 				"command": "cargo-atcoder-vscode.submit",
 				"title": "cargo-atcoder-vscode: Submit"
-			}
-		],
-		"taskDefinitions": [
+			},
 			{
-				"type": "cargoAtcoderProvider",
-				"properties": {
-					"command": {
-						"type": "string"
-					}
-				}
+				"command": "cargo-atcoder-vscode.submit-force",
+				"title": "cargo-atcoder-vscode: Submit (force)"
+			},
+			{
+				"command": "cargo-atcoder-vscode.status",
+				"title": "cargo-atcoder-vscode: Status"
+			},
+			{
+				"command": "cargo-atcoder-vscode.run",
+				"title": "cargo-atcoder-vscode: Run"
 			}
 		]
 	},
