@@ -15,7 +15,8 @@
 		"onCommand:cargo-atcoder-vscode.submit",
 		"onCommand:cargo-atcoder-vscode.submit-force",
 		"onCommand:cargo-atcoder-vscode.status",
-		"onCommand:cargo-atcoder-vscode.run"
+		"onCommand:cargo-atcoder-vscode.run",
+		"onCommand:cargo-atcoder-vscode.open"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -39,6 +40,10 @@
 			{
 				"command": "cargo-atcoder-vscode.run",
 				"title": "cargo-atcoder-vscode: Run"
+			},
+			{
+				"command": "cargo-atcoder-vscode.open",
+				"title": "cargo-atcoder-vscode: Open"
 			}
 		]
 	},
