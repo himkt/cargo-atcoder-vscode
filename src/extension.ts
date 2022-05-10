@@ -52,11 +52,21 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.tasks.executeTask(task);
 	});
 
+	let openCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.open', () => {
+		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
+		const basename = path.parse(currentFilePath).name;
+		const folderName = vscode.workspace.workspaceFolders![0].name;
+		const taskUrl = `https://atcoder.jp/contests/${folderName}/tasks/${folderName}_${basename}`;
+		const uri = vscode.Uri.parse(taskUrl);
+		vscode.env.openExternal(uri);
+	});
+
 	context.subscriptions.push(testCommand);
 	context.subscriptions.push(submitCommand);
 	context.subscriptions.push(forceSubmitCommand);
 	context.subscriptions.push(statusCommand);
 	context.subscriptions.push(runCommand);
+	context.subscriptions.push(openCommand);
 }
 
 export function deactivate() {}
