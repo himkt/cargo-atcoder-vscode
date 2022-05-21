@@ -5,6 +5,6 @@
 ## Install
 
 ```sh
-> wget https://github.com/himkt/cargo-atcoder-vscode/releases/download/v0.0.5/cargo-atcoder-vscode-0.0.5.vsix
-> code --install-extension  cargo-atcoder-vscode-0.0.5.vsix
+> wget https://github.com/himkt/cargo-atcoder-vscode/releases/download/v0.0.6/cargo-atcoder-vscode-0.0.6.vsix
+> code --install-extension  cargo-atcoder-vscode-0.0.6.vsix
 ```
