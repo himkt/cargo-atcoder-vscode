@@ -1,71 +1,77 @@
 {
   "name": "cargo-atcoder-vscode",
-	"displayName": "cargo-atcoder-vscode",
-	"description": "",
-	"repository": "https://github.com/himkt/cargo-atcoder-vscode",
-	"version": "0.0.4",
-	"engines": {
-		"vscode": "^1.66.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:cargo-atcoder-vscode.test",
-		"onCommand:cargo-atcoder-vscode.submit",
-		"onCommand:cargo-atcoder-vscode.submit-force",
-		"onCommand:cargo-atcoder-vscode.status",
-		"onCommand:cargo-atcoder-vscode.run",
-		"onCommand:cargo-atcoder-vscode.open"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "cargo-atcoder-vscode.test",
-				"title": "cargo-atcoder-vscode: Test"
-			},
-			{
-				"command": "cargo-atcoder-vscode.submit",
-				"title": "cargo-atcoder-vscode: Submit"
-			},
-			{
-				"command": "cargo-atcoder-vscode.submit-force",
-				"title": "cargo-atcoder-vscode: Submit (force)"
-			},
-			{
-				"command": "cargo-atcoder-vscode.status",
-				"title": "cargo-atcoder-vscode: Status"
-			},
-			{
-				"command": "cargo-atcoder-vscode.run",
-				"title": "cargo-atcoder-vscode: Run"
-			},
-			{
-				"command": "cargo-atcoder-vscode.open",
-				"title": "cargo-atcoder-vscode: Open"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/vscode": "^1.66.0",
-		"@types/glob": "^7.2.0",
-		"@types/mocha": "^9.1.1",
-		"@types/node": "14.x",
-		"@typescript-eslint/eslint-plugin": "^5.21.0",
-		"@typescript-eslint/parser": "^5.21.0",
-		"eslint": "^8.14.0",
-		"glob": "^8.0.1",
-		"mocha": "^9.2.2",
-		"typescript": "^4.6.4",
-		"@vscode/test-electron": "^2.1.3"
-	}
+  "displayName": "cargo-atcoder-vscode",
+  "description": "",
+  "repository": "https://github.com/himkt/cargo-atcoder-vscode",
+  "version": "0.0.4",
+  "engines": {
+    "vscode": "^1.66.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:cargo-atcoder-vscode.test",
+    "onCommand:cargo-atcoder-vscode.submit",
+    "onCommand:cargo-atcoder-vscode.submit-force",
+    "onCommand:cargo-atcoder-vscode.status",
+    "onCommand:cargo-atcoder-vscode.run",
+    "onCommand:cargo-atcoder-vscode.open"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "cargo-atcoder-vscode.test",
+        "title": "cargo-atcoder-vscode: Test"
+      },
+      {
+        "command": "cargo-atcoder-vscode.submit",
+        "title": "cargo-atcoder-vscode: Submit"
+      },
+      {
+        "command": "cargo-atcoder-vscode.submit-force",
+        "title": "cargo-atcoder-vscode: Submit (force)"
+      },
+      {
+        "command": "cargo-atcoder-vscode.status",
+        "title": "cargo-atcoder-vscode: Status"
+      },
+      {
+        "command": "cargo-atcoder-vscode.run",
+        "title": "cargo-atcoder-vscode: Run"
+      },
+      {
+        "command": "cargo-atcoder-vscode.open",
+        "title": "cargo-atcoder-vscode: Open"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "14.x",
+    "@types/node-fetch": "^2.6.1",
+    "@types/vscode": "^1.66.0",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "@vscode/test-electron": "^2.1.3",
+    "eslint": "^8.14.0",
+    "glob": "^8.0.1",
+    "mocha": "^9.2.2",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "@types/cheerio": "^0.22.31",
+    "cheerio": "^1.0.0-rc.11",
+    "node-fetch": "^2.6.7"
+  }
 }
