@@ -54,12 +54,12 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.tasks.executeTask(task);
 	});
 
-	let openCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.open', () => {
+	let openCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.open', async () => {
 		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
-		const baseName = path.parse(currentFilePath).name.toUpperCase();
+		const baseName = path.parse(currentFilePath).name;
 		const folderName = vscode.workspace.workspaceFolders![0].name;
 
-		fetch(`https://atcoder.jp/contests/${folderName}/tasks`)
+		let taskPath = await fetch(`https://atcoder.jp/contests/${folderName}/tasks`)
 			.then(response => response.text())
 			.then(text => {
 				const $ = cheerio.load(text);
@@ -67,14 +67,24 @@ export async function activate(context: vscode.ExtensionContext) {
 
 				const matchedTask = tdData.find("a").filter((_, e) => {
 					const data = $(e);
-					return data.text().trim() === baseName;
+					return data.text().trim() === baseName.toUpperCase();
 				});
 
 				const taskPath = matchedTask.attr("href");
-				const taskUrl = 'https://atcoder.jp' + taskPath;
-				const uri = vscode.Uri.parse(taskUrl);
-				vscode.env.openExternal(uri);
+				return taskPath;
 			});
+
+		// NOTE (himkt): fallback.
+		//
+		// It is typically needed just after the beginning of competition
+		// when the task list page is not available yet.
+		if (taskPath === undefined) {
+			taskPath = `/contests/${folderName}/tasks/${folderName}_${baseName}`;
+		}
+
+		const taskUrl = 'https://atcoder.jp' + taskPath;
+		const uri = vscode.Uri.parse(taskUrl);
+		vscode.env.openExternal(uri);
 	});
 
 	context.subscriptions.push(testCommand);
