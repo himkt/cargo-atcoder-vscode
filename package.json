@@ -26,6 +26,10 @@
         "title": "cargo-atcoder-vscode: Test"
       },
       {
+        "command": "cargo-atcoder-vscode.test-debug",
+        "title": "cargo-atcoder-vscode: Test (debug)"
+      },
+      {
         "command": "cargo-atcoder-vscode.submit",
         "title": "cargo-atcoder-vscode: Submit"
       },
