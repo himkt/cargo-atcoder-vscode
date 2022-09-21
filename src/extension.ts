@@ -24,6 +24,13 @@ export async function activate(context: vscode.ExtensionContext) {
 	let testCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.test', () => {
 		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
 		const baseName = path.parse(currentFilePath).name;
+		const task = createTask('test', `cargo atcoder test --release ${baseName}`);
+		vscode.tasks.executeTask(task);
+	});
+
+	let testDebugCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.test-debug', () => {
+		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
+		const baseName = path.parse(currentFilePath).name;
 		const task = createTask('test', `cargo atcoder test ${baseName}`);
 		vscode.tasks.executeTask(task);
 	});
@@ -31,14 +38,14 @@ export async function activate(context: vscode.ExtensionContext) {
 	let submitCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.submit', () => {
 		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
 		const baseName = path.parse(currentFilePath).name;
-		const task = createTask('submit', `cargo atcoder submit ${baseName}`);
+		const task = createTask('submit', `cargo atcoder submit --release ${baseName}`);
 		vscode.tasks.executeTask(task);
 	});
 
 	let forceSubmitCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.submit-force', () => {
 		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
 		const baseName = path.parse(currentFilePath).name;
-		const task = createTask('submit', `cargo atcoder submit --force ${baseName}`);
+		const task = createTask('submit', `cargo atcoder submit --release --force ${baseName}`);
 		vscode.tasks.executeTask(task);
 	});
 
@@ -88,6 +95,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(testCommand);
+	context.subscriptions.push(testDebugCommand);
 	context.subscriptions.push(submitCommand);
 	context.subscriptions.push(forceSubmitCommand);
 	context.subscriptions.push(statusCommand);
