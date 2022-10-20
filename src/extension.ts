@@ -102,7 +102,6 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage("Empty contest identifier.");
 			return;
 		}
-		vscode.window.showErrorMessage(contestIdentifier);
 		const configurations = vscode.workspace.getConfiguration("cargo-atcoder-vscode");
 		const rootDir = configurations.rootDir;
 
