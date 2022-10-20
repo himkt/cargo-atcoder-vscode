@@ -5,6 +5,7 @@ import * as path from 'path';
 
 import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
+import { existsSync } from 'fs';
 
 const type = 'cargo-atcoder';
 
@@ -104,16 +105,18 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 		const configurations = vscode.workspace.getConfiguration("cargo-atcoder-vscode");
 		const rootDir = configurations.rootDir;
-
-		const task = createTask(
-			'new',
-			`cargo atcoder new ${contestIdentifier}`,
-			{cwd: rootDir},
-		);
+		const targetFolder = path.join(rootDir, contestIdentifier);
+		const targetFolderUri = vscode.Uri.parse(targetFolder);
+		if (existsSync(targetFolder)) {
+			vscode.window.showErrorMessage("open");
+			vscode.commands.executeCommand('vscode.openFolder', targetFolderUri);
+			return;
+		}
+		const command = `cargo atcoder new ${contestIdentifier}`;
+		const options = {cwd: rootDir};
+		const task = createTask('new', command, options);
 		vscode.tasks.executeTask(task);
 		vscode.tasks.onDidEndTask(async _ => {
-			const targetFolder = path.join(rootDir, contestIdentifier);
-			const targetFolderUri = vscode.Uri.parse(targetFolder);
 			await vscode.commands.executeCommand('vscode.openFolder', targetFolderUri);
 		});
 	});
