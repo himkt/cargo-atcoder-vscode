@@ -3,7 +3,7 @@
   "displayName": "cargo-atcoder-vscode",
   "description": "",
   "repository": "https://github.com/himkt/cargo-atcoder-vscode",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "engines": {
     "vscode": "^1.66.0"
   },
@@ -16,7 +16,8 @@
     "onCommand:cargo-atcoder-vscode.submit-force",
     "onCommand:cargo-atcoder-vscode.status",
     "onCommand:cargo-atcoder-vscode.run",
-    "onCommand:cargo-atcoder-vscode.open"
+    "onCommand:cargo-atcoder-vscode.open",
+    "onCommand:cargo-atcoder-vscode.new"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -48,6 +49,22 @@
       {
         "command": "cargo-atcoder-vscode.open",
         "title": "cargo-atcoder-vscode: Open"
+      },
+      {
+        "command": "cargo-atcoder-vscode.new",
+        "title": "cargo-atcoder-vscode: New"
+      }
+    ],
+    "configuration":[
+      {
+        "title": "cargo-atcoder root dir",
+        "properties": {
+          "cargo-atcoder-vscode.rootDir": {
+            "type": ["string", "null"],
+            "default": "/tmp",
+            "description": "Target directory that a contest directory is created."
+          }
+        }
       }
     ]
   },
