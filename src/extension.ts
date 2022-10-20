@@ -112,17 +112,10 @@ export async function activate(context: vscode.ExtensionContext) {
 			{cwd: rootDir},
 		);
 		vscode.tasks.executeTask(task);
-
-		vscode.tasks.onDidEndTask(e => {
-			// const openFolder = path.join(rootDir, contestIdentifier);
-			// vscode.window.showErrorMessage(openFolder);
-			// await vscode.commands.executeCommand('vscode.openFolder', openFolder);
-			vscode.window.showErrorMessage("raech");
-			vscode.commands.executeCommand(
-				'vscode.openFolder',
-				'/Users/himkt/Desktop/arc005',
-				true,
-			);
+		vscode.tasks.onDidEndTask(async _ => {
+			const targetFolder = path.join(rootDir, contestIdentifier);
+			const targetFolderUri = vscode.Uri.parse(targetFolder);
+			await vscode.commands.executeCommand('vscode.openFolder', targetFolderUri);
 		});
 	});
 
