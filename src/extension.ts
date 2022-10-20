@@ -9,13 +9,13 @@ import * as cheerio from 'cheerio';
 const type = 'cargo-atcoder';
 
 
-const createTask = (name: string, command: string) => {
+const createTask = (name: string, command: string, options: vscode.ShellExecutionOptions) => {
 	return new vscode.Task(
 		{ type, name },
 		vscode.TaskScope.Workspace,
 		name,
 		type,
-		new vscode.ShellExecution(command),
+		new vscode.ShellExecution(command, options),
 	);
 };
 
@@ -24,40 +24,40 @@ export async function activate(context: vscode.ExtensionContext) {
 	let testCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.test', () => {
 		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
 		const baseName = path.parse(currentFilePath).name;
-		const task = createTask('test', `cargo atcoder test --release ${baseName}`);
+		const task = createTask('test', `cargo atcoder test --release ${baseName}`, {});
 		vscode.tasks.executeTask(task);
 	});
 
 	let testDebugCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.test-debug', () => {
 		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
 		const baseName = path.parse(currentFilePath).name;
-		const task = createTask('test', `cargo atcoder test ${baseName}`);
+		const task = createTask('test', `cargo atcoder test ${baseName}`, {});
 		vscode.tasks.executeTask(task);
 	});
 
 	let submitCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.submit', () => {
 		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
 		const baseName = path.parse(currentFilePath).name;
-		const task = createTask('submit', `cargo atcoder submit --release ${baseName}`);
+		const task = createTask('submit', `cargo atcoder submit --release ${baseName}`, {});
 		vscode.tasks.executeTask(task);
 	});
 
 	let forceSubmitCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.submit-force', () => {
 		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
 		const baseName = path.parse(currentFilePath).name;
-		const task = createTask('submit', `cargo atcoder submit --release --force ${baseName}`);
+		const task = createTask('submit', `cargo atcoder submit --release --force ${baseName}`, {});
 		vscode.tasks.executeTask(task);
 	});
 
 	let statusCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.status', () => {
-		const task = createTask('status', 'cargo atcoder status');
+		const task = createTask('status', 'cargo atcoder status', {});
 		vscode.tasks.executeTask(task);
 	});
 
 	let runCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.run', () => {
 		const currentFilePath = vscode.window.activeTextEditor?.document.fileName!;
 		const baseName = path.parse(currentFilePath).name;
-		const task = createTask('run', `cargo run --bin ${baseName}`);
+		const task = createTask('run', `cargo run --bin ${baseName}`, {});
 		vscode.tasks.executeTask(task);
 	});
 
@@ -94,6 +94,38 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.env.openExternal(uri);
 	});
 
+	let createCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.new', async () => {
+		const contestIdentifier = await vscode.window.showInputBox({
+			"prompt": "AtCoder contest identifier (e.g. `abc100`): ",
+		})
+		if (contestIdentifier == null) {
+			vscode.window.showErrorMessage("Empty contest identifier.");
+			return;
+		}
+		vscode.window.showErrorMessage(contestIdentifier);
+		const configurations = vscode.workspace.getConfiguration("cargo-atcoder-vscode");
+		const rootDir = configurations.rootDir;
+
+		const task = createTask(
+			'new',
+			`cargo atcoder new ${contestIdentifier}`,
+			{cwd: rootDir},
+		);
+		vscode.tasks.executeTask(task);
+
+		vscode.tasks.onDidEndTask(e => {
+			// const openFolder = path.join(rootDir, contestIdentifier);
+			// vscode.window.showErrorMessage(openFolder);
+			// await vscode.commands.executeCommand('vscode.openFolder', openFolder);
+			vscode.window.showErrorMessage("raech");
+			vscode.commands.executeCommand(
+				'vscode.openFolder',
+				'/Users/himkt/Desktop/arc005',
+				true,
+			);
+		});
+	});
+
 	context.subscriptions.push(testCommand);
 	context.subscriptions.push(testDebugCommand);
 	context.subscriptions.push(submitCommand);
@@ -101,6 +133,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(statusCommand);
 	context.subscriptions.push(runCommand);
 	context.subscriptions.push(openCommand);
+	context.subscriptions.push(createCommand)
 }
 
 export function deactivate() {}
