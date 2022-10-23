@@ -82,10 +82,8 @@ export async function activate(context: vscode.ExtensionContext) {
 				return taskPath;
 			});
 
-		// NOTE (himkt): fallback.
-		//
-		// It is typically needed just after the beginning of competition
-		// when the task list page is not available yet.
+		// Fallback logic for the case where `taskPath` couldn't get correctly. It is typically needed
+		// right after the beginning of competition (the task list page won't be available yet).
 		if (taskPath === undefined) {
 			taskPath = `/contests/${folderName}/tasks/${folderName}_${baseName}`;
 		}
@@ -98,22 +96,47 @@ export async function activate(context: vscode.ExtensionContext) {
 	let createCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.new', async () => {
 		const contestIdentifier = await vscode.window.showInputBox({
 			"prompt": "AtCoder contest identifier (e.g. `abc100`): ",
-		})
-		if (contestIdentifier == null) {
+		});
+		if (contestIdentifier == undefined || contestIdentifier == "") {
 			vscode.window.showErrorMessage("Empty contest identifier.");
 			return;
 		}
 		const configurations = vscode.workspace.getConfiguration("cargo-atcoder-vscode");
-		const rootDir = configurations.rootDir;
-		const targetFolder = path.join(rootDir, contestIdentifier);
+		let cargoAtCoderRootDir = configurations.rootDir;
+		if (cargoAtCoderRootDir == "") {
+			const response = await vscode.window.showInformationMessage(
+				`
+				Empty root dir is detected. A folder will be created in /tmp.
+				Consider updating the root directory in 'Settings > cargo-atcoder > Root Dir'.
+				`,
+				"Configure...",
+				"Continue: use '/tmp'",
+			);
+			if (response == undefined) {
+				vscode.window.showInformationMessage("Exit.", "Close");
+				return;
+			}
+			else if (response == "Configure...") {
+				await vscode.commands.executeCommand(
+					'workbench.action.openSettings',
+					'cargo-atcoder-vscode.rootDir',
+				);
+				return;
+			}
+			else if (response == "Continue: use '/tmp'") {
+				cargoAtCoderRootDir = "/tmp";
+			}
+		}
+
+		const targetFolder = path.join(cargoAtCoderRootDir, contestIdentifier);
 		const targetFolderUri = vscode.Uri.parse(targetFolder);
 		if (existsSync(targetFolder)) {
-			vscode.window.showErrorMessage("open");
+			vscode.window.showErrorMessage(`${targetFolder} already exists. Opening...`);
 			vscode.commands.executeCommand('vscode.openFolder', targetFolderUri);
 			return;
 		}
 		const command = `cargo atcoder new ${contestIdentifier}`;
-		const options = {cwd: rootDir};
+		const options = {cwd: cargoAtCoderRootDir};
 		const task = createTask('new', command, options);
 		vscode.tasks.executeTask(task);
 		vscode.tasks.onDidEndTask(async _ => {
