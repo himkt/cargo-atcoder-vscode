@@ -57,10 +57,10 @@
     ],
     "configuration":[
       {
-        "title": "cargo-atcoder root dir",
+        "title": "cargo-atcoder",
         "properties": {
           "cargo-atcoder-vscode.rootDir": {
-            "type": ["string", "null"],
+            "type": "string",
             "default": "/tmp",
             "description": "Target directory that a contest directory is created."
           }
