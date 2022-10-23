@@ -9,17 +9,11 @@ import { existsSync } from 'fs';
 
 const type = 'cargo-atcoder';
 
-
 const createTask = (name: string, command: string, options: vscode.ShellExecutionOptions) => {
-	return new vscode.Task(
-		{ type, name },
-		vscode.TaskScope.Workspace,
-		name,
-		type,
-		new vscode.ShellExecution(command, options),
-	);
+	const taskDefinition = { type, name };
+	const execution = new vscode.ShellExecution(command, options);
+	return new vscode.Task(taskDefinition, vscode.TaskScope.Workspace, name, type, execution);
 };
-
 
 export async function activate(context: vscode.ExtensionContext) {
 	let testCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.test', () => {
@@ -72,28 +66,29 @@ export async function activate(context: vscode.ExtensionContext) {
 			.then(text => {
 				const $ = cheerio.load(text);
 				const tdData = $('table > tbody > tr > td.text-center');
-
-				const matchedTask = tdData.find("a").filter((_, e) => {
-					const data = $(e);
-					return data.text().trim() === baseName.toUpperCase();
+				const matchedElement = tdData.find("a").filter((_, e) => {
+					return $(e).text().trim() === baseName.toUpperCase();
 				});
 
-				const taskPath = matchedTask.attr("href");
+				if (matchedElement.length != 1) { return undefined; }
+				return matchedElement.attr("href");
+			})
+			.then(taskPath => {
+				// Fallback logic for the case where `taskPath` couldn't get correctly.
+				// It is typically needed right after the beginning of competition.
+				// (=the task list page won't be available yet)
+				if (taskPath == undefined) {
+					return `/contests/${folderName}/tasks/${folderName}_${baseName}`;
+				}
 				return taskPath;
-			});
-
-		// Fallback logic for the case where `taskPath` couldn't get correctly. It is typically needed
-		// right after the beginning of competition (the task list page won't be available yet).
-		if (taskPath === undefined) {
-			taskPath = `/contests/${folderName}/tasks/${folderName}_${baseName}`;
-		}
+			})
 
 		const taskUrl = 'https://atcoder.jp' + taskPath;
 		const uri = vscode.Uri.parse(taskUrl);
-		vscode.env.openExternal(uri);
+		await vscode.env.openExternal(uri);
 	});
 
-	let createCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.new', async () => {
+	let newCommand = vscode.commands.registerCommand('cargo-atcoder-vscode.new', async () => {
 		const contestIdentifier = await vscode.window.showInputBox({
 			"prompt": "AtCoder contest identifier (e.g. `abc100`): ",
 		});
@@ -151,7 +146,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(statusCommand);
 	context.subscriptions.push(runCommand);
 	context.subscriptions.push(openCommand);
-	context.subscriptions.push(createCommand)
+	context.subscriptions.push(newCommand)
 }
 
 export function deactivate() {}

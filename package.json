@@ -3,7 +3,7 @@
   "displayName": "cargo-atcoder-vscode",
   "description": "",
   "repository": "https://github.com/himkt/cargo-atcoder-vscode",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "engines": {
     "vscode": "^1.66.0"
   },

@@ -7,8 +7,8 @@ See also https://zenn.dev/himkt/articles/8e44abfa5caca7 for the introduction.
 ## Install
 
 ```sh
-> wget https://github.com/himkt/cargo-atcoder-vscode/releases/download/v0.0.9/cargo-atcoder-vscode-0.0.9.vsix
-> code --install-extension  cargo-atcoder-vscode-0.0.9.vsix
+> wget https://github.com/himkt/cargo-atcoder-vscode/releases/download/v0.0.10/cargo-atcoder-vscode-0.0.10.vsix
+> code --install-extension  cargo-atcoder-vscode-0.0.10.vsix
 ```
 
 ## Release
